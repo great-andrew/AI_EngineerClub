@@ -2,7 +2,15 @@ import dotenv
 import asyncio
 from openai import OpenAI
 import streamlit as st
-from agents import Agent, Runner, SQLiteSession, WebSearchTool, FileSearchTool
+from agents import (
+    Agent,
+    Runner,
+    SQLiteSession,
+    WebSearchTool,
+    FileSearchTool,
+    ImageGenerationTool,
+)
+import base64
 
 dotenv.load_dotenv()
 
@@ -19,7 +27,8 @@ if "agent" not in st.session_state:
 
             **Available Tools:**
             - FileSearchTool: Search the user's uploaded documents (goals, journal entries, progress logs).
-            - WebSearchTool: Search the web for latest research, strategies, and expert tips.
+            - WebSearchTool: Search the web for latest research, motivational content, strategies, and expert tips.
+            - ImageGenerationTool: Generate motivational images, vision boards, and progress visuals tailored to the user's goals.
 
             **Tool Usage Strategy:**
 
@@ -32,7 +41,21 @@ if "agent" not in st.session_state:
 
             2. WebSearchTool - Use in these cases:
             - The user's goal requires the latest research, techniques, or expert strategies
-            - Specific methodologies or evidence-based tips are needed to complement the advice
+            - Motivational content, quotes, or evidence-based tips are needed to complement the advice
+
+            3. ImageGenerationTool - Use in these cases:
+            - The user requests a vision board based on their documented goals
+            - The user asks for a motivational poster with a personalized message
+            - A visual representation of the user's progress would enhance encouragement
+            - Proactively suggest image generation when it would meaningfully boost motivation
+            ※ Always base the image prompt on the user's actual goals and records from FileSearchTool or conversation history.
+                Never generate generic motivational images — make them specific to the user's journey.
+
+            **Image Generation Guidelines:**
+            - Vision Board: Incorporate the user's specific goals, milestones, and aspirations into the visual
+            - Motivational Poster: Include a personalized message that directly references the user's progress or goals
+            - Progress Visual: Reflect the user's actual achievements compared to their documented targets
+            - Style: Warm, inspiring, and visually clear — avoid cluttered or overly complex compositions
 
             **Your Core Responsibilities:**
 
@@ -49,9 +72,21 @@ if "agent" not in st.session_state:
             - Present a concrete assessment of current achievement relative to the documented goals
             - Provide balanced feedback on what is on track and what needs more attention
 
+            4. **Visual Motivation**
+            - Proactively offer to generate a vision board or motivational poster at meaningful moments
+                (e.g., when the user reaches a milestone, feels discouraged, or sets a new goal)
+            - Ensure every generated image feels personal and directly tied to the user's unique journey
+
+            **Tool Collaboration Flow:**
+            When all three tools work together, follow this natural sequence:
+            1. FileSearchTool → Retrieve the user's goals and past records
+            2. WebSearchTool → Find relevant advice or motivational content aligned with those goals
+            3. ImageGenerationTool → Create a personalized visual that reinforces the advice and celebrates progress
+
             **Important Rules:**
             - Every response must be grounded in the user's actual uploaded documents or conversation history
             - Generic advice is not allowed — always connect guidance to the user's specific goals
+            - All generated images must reflect the user's personal goals, not generic themes
             - Keep responses concise, warm, and actionable
             - Acknowledge and celebrate even small wins explicitly
             """,
@@ -60,6 +95,14 @@ if "agent" not in st.session_state:
             FileSearchTool(
                 max_num_results=3,
                 vector_store_ids=[VECTOR_STORE_ID],
+            ),
+            ImageGenerationTool(
+                tool_config={
+                    "type": "image_generation",
+                    "moderation": "low",
+                    "quality": "high",
+                    "partial_images": 1,
+                }
             ),
         ],
     )
@@ -79,9 +122,15 @@ async def paint_history():
         if message.get("role"):
             with st.chat_message(message["role"]):
                 if message["role"] == "user":
-                    st.write(message["content"])
+                    content = message["content"]
+                    if isinstance(content, str):
+                        st.write(content)
+                    elif isinstance(content, list):
+                        for part in content:
+                            if "image_url" in part:
+                                st.image(part["image_url"])
                 else:
-                    st.write(message["content"][0]["text"])
+                    st.write(message["content"][0]["text"].replace("$", "\$"))
         if "type" in message:
             if message["type"] == "web_search_call":
                 with st.chat_message("ai"):
@@ -89,6 +138,10 @@ async def paint_history():
             elif message["type"] == "file_search_call":
                 with st.chat_message("ai"):
                     st.write("🗂️ Searched your files...")
+            elif message["type"] == "image_generation_call":
+                with st.chat_message("ai"):
+                    image = base64.b64decode(message["result"])
+                    st.image(image)
 
 
 asyncio.run(paint_history())
@@ -115,6 +168,14 @@ def update_status(status_container, event):
             "🗂️ File search in progress...",
             "running",
         ),
+        "response.image_generation_call.generating": (
+            "🎨 Image Generation in progress...",
+            "running",
+        ),
+        "response.image_generation_call.in_progress": (
+            "🎨 Image Generation in progress...",
+            "running",
+        ),
         "response.completed": ("", "complete"),
     }
 
@@ -127,8 +188,13 @@ async def run_agent(message):
 
     with st.chat_message("assistant"):
         status_container = st.status("", expanded=False)
+        image_placeholder = st.empty()
         text_placeholder = st.empty()
         response = ""
+
+        st.session_state["image_placeholder"] = image_placeholder
+        st.session_state["text_placeholder"] = text_placeholder
+
         stream = Runner.run_streamed(agent, message, session=session)
 
         async for event in stream.stream_events():
@@ -139,15 +205,23 @@ async def run_agent(message):
                 if event.data.type == "response.output_text.delta":
                     response += event.data.delta
                     text_placeholder.write(response)
+                elif event.data.type == "response.image_generation_call.partial_image":
+                    image = base64.b64decode(event.data.partial_image_b64)
+                    image_placeholder.image(image)
 
 
 prompt = st.chat_input(
     "Write a message for your assistant.",
     accept_file=True,
-    file_type=["txt"],
+    file_type=["txt", "jpg", "gif", "png", "jpeg"],
 )
 
 if prompt:
+
+    if "image_placeholder" in st.session_state:
+        st.session_state["image_placeholder"].empty()
+    if "text_placeholder" in st.session_state:
+        st.session_state["text_placeholder"].empty()
 
     for file in prompt.files:
         if file.type.startswith("text/"):
@@ -163,7 +237,37 @@ if prompt:
                         file_id=uploaded_file.id,
                     )
                     status.update(label="Done!", state="complete")
+        elif file.type.startswith("image/"):
+            with st.status("Uploading image...") as status:
+                file_bytes = file.getvalue()
+                base64_data = base64.b64encode(file_bytes).decode("utf-8")
+                data_uri = f"data:{file.type};base64,{base64_data}"
+                asyncio.run(
+                    session.add_items(
+                        [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {
+                                        "type": "input_image",
+                                        "detail": "auto",
+                                        "image_url": data_uri,
+                                    }
+                                ],
+                            }
+                        ]
+                    )
+                )
+            status.update(label="Done!", state="complete")
+            with st.chat_message("user"):
+                st.image(data_uri)
+
     if prompt.text:
+        items = asyncio.run(session.get_items())
+        clean_items = [item for item in items if "action" not in item]
+
+        asyncio.run(session.clear_session())
+        asyncio.run(session.add_items(clean_items))
         with st.chat_message("human"):
             st.write(prompt.text)
         asyncio.run(run_agent(prompt.text))
