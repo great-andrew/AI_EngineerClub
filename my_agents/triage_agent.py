@@ -13,7 +13,7 @@ from models import UserAccountContext, InputGuardRailOutput, HandoffData
 from my_agents.menu_agent import menu_agent
 from my_agents.order_agent import order_agent
 from my_agents.reservation_agent import reservation_agent
-
+from hooks import StreamlitAgentHooks
 
 input_guardrail_agent = Agent(
     name="Input Guardrail Agent",
@@ -45,6 +45,7 @@ async def off_topic_guardrail(
 def handle_handoff(
     wrapper: RunContextWrapper[UserAccountContext], input_data: HandoffData
 ):
+
     with st.sidebar:
         st.write(
             f"""
@@ -54,8 +55,6 @@ def handle_handoff(
             Description: {input_data.issue_description}
         """
         )
-    with st.chat_message("ai"):
-        st.write(f"[{input_data.to_agent_name}로 Handoff 되었습니다.]")
 
 
 def make_handoff(agent):
@@ -119,4 +118,5 @@ triage_agent = Agent(
         make_handoff(order_agent),
         make_handoff(reservation_agent),
     ],
+    hooks=StreamlitAgentHooks(),
 )

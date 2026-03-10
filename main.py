@@ -32,7 +32,7 @@ async def paint_history():
                 if message["role"] == "user":
                     st.write(message["content"])
                 else:
-                    if message["type"] == "message":
+                    if message.get("type") and message["type"] == "message":
                         st.write(message["content"][0]["text"].replace("$", "\$"))
 
 
@@ -42,9 +42,11 @@ asyncio.run(paint_history())
 async def run_agent(message):
 
     with st.chat_message("ai"):
+        handoff_placeholder = st.empty()
         text_placeholder = st.empty()
         response = ""
 
+        st.session_state["handoff_placeholder"] = handoff_placeholder
         st.session_state["text_placeholder"] = text_placeholder
 
         try:
@@ -72,6 +74,8 @@ message = st.chat_input(
 
 if message:
 
+    if "handoff_placeholder" in st.session_state:
+        st.session_state["handoff_placeholder"].empty()
     if "text_placeholder" in st.session_state:
         st.session_state["text_placeholder"].empty()
 
