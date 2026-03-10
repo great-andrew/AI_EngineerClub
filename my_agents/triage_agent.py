@@ -118,5 +118,4 @@ triage_agent = Agent(
         make_handoff(order_agent),
         make_handoff(reservation_agent),
     ],
-    hooks=StreamlitAgentHooks(),
 )
