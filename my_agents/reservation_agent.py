@@ -1,5 +1,6 @@
 from agents import Agent, RunContextWrapper
 from models import UserAccountContext
+from guardrail.reservation_output_guardrail import reservation_output_guardrail
 
 
 def dynamic_reservation_agent_instructions(
@@ -27,4 +28,7 @@ def dynamic_reservation_agent_instructions(
 reservation_agent = Agent(
     name="Reservation Management Agent",
     instructions=dynamic_reservation_agent_instructions,
+    output_guardrails=[
+        reservation_output_guardrail,
+    ],
 )

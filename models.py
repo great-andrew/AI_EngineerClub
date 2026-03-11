@@ -13,6 +13,31 @@ class InputGuardRailOutput(BaseModel):
     is_off_topic: bool
     reason: str
 
+
+class MenuOutputGuardRailOutput(BaseModel):
+
+    is_off_topic: bool
+    reason: str
+
+
+class ComplaintOutputGuardRailOutput(BaseModel):
+
+    is_off_topic: bool
+    reason: str
+
+
+class OrderOutputGuardRailOutput(BaseModel):
+
+    is_off_topic: bool
+    reason: str
+
+
+class ReservationOutputGuardRailOutput(BaseModel):
+
+    is_off_topic: bool
+    reason: str
+
+
 class HandoffData(BaseModel):
 
     to_agent_name: str
