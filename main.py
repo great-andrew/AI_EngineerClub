@@ -165,7 +165,29 @@ if message:
 
 
 with st.sidebar:
-
+    if "agent" in st.session_state:
+        agent_name = st.session_state["agent"].name
+        st.markdown(
+            f"""
+            <div style="
+                background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
+                border-left: 3px solid #18dcff;
+                border-radius: 8px;
+                padding: 0.8rem 1.2rem;
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+            ">
+                <div style="color: #18dcff; font-weight: 700; font-size: 0.75rem;
+                            letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+                    🤖 ACTIVE AGENT
+                </div>
+                <div style="color: #e0e0e8; font-weight: 600; font-size: 0.95rem;">
+                    {agent_name}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
     reset = st.button("Reset memory")
     if reset:
         asyncio.run(session.clear_session())
