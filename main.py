@@ -152,8 +152,8 @@ message = st.chat_input(
 
 if message:
 
-    if "text_placeholder" in st.session_state:
-        st.session_state["text_placeholder"].empty()
+    # if "text_placeholder" in st.session_state:
+    #     st.session_state["text_placeholder"].empty()
 
     if message:
         with st.chat_message("human"):
