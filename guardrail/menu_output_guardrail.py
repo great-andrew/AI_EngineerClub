@@ -10,7 +10,6 @@ from models import MenuOutputGuardRailOutput, UserAccountContext
 
 menu_output_guardrail_agent = Agent(
     name="Menu Output Guardrail",
-    model="gpt-4o-mini",
     instructions="""
 Before sending your response, ensure the following:
 
@@ -46,12 +45,7 @@ async def menu_output_guardrail(
 
     validation = result.final_output
 
-    triggered = (
-        validation.is_off_topic
-        or validation.contains_unavailable_item
-        or validation.contains_incorrect_price
-        or validation.contains_allergen_error
-    )
+    triggered = validation.is_off_topic
 
     with st.sidebar:
         st.write(validation)

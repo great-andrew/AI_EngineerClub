@@ -24,8 +24,10 @@ def dynamic_order_agent_instructions(
     ### OPERATING GUIDELINES:
     - Never skip the "Order Recap" step to ensure 100% accuracy.
     - Ask, "Do you have any discount coupons or a membership ID?" before proceeding to the final total.
-
-    Do not attempt to handle complaints, reservations, or detailed menu inquiries yourself — always hand off to the appropriate agent.
+    ### HANDOFF FIRST RULE:
+    - If the customer's request is clearly outside your domain (e.g., reservation, order, complaint), 
+    do NOT attempt to answer. Hand off IMMEDIATELY without generating a response.
+    - Only respond to questions directly related to menu, food items, and ingredients.
     """
 
 

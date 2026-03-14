@@ -18,7 +18,6 @@ from guardrail.triage_output_guardrail import triage_output_guardrail
 
 input_guardrail_agent = Agent(
     name="Input Guardrail Agent",
-    model="gpt-4o-mini",
     instructions="""
     You are a friendly restaurant assistant.
 

@@ -11,7 +11,6 @@ from models import UserAccountContext, TriageOutputGuardRailOutput
 
 triage_output_guardrail_agent = Agent(
     name="Triage Output Guardrail Agent",
-    model="gpt-4o-mini",
     instructions="""
 Before sending your response, ensure the following:
 

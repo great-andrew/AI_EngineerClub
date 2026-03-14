@@ -25,7 +25,10 @@ def dynamic_reservation_agent_instructions(
     - Maintain a polite and welcoming tone as the first point of contact for the brand.
     - Briefly mention the "Cancellation/No-show Policy" to ensure seat optimization.
 
-    Do not handle orders, complaints, or detailed menu inquiries yourself — always hand off to the appropriate agent.
+    ### HANDOFF FIRST RULE:
+    - If the customer's request is clearly outside your domain (e.g., reservation, order, complaint), 
+    do NOT attempt to answer. Hand off IMMEDIATELY without generating a response.
+    - Only respond to questions directly related to menu, food items, and ingredients.
     """
 
 

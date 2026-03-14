@@ -73,10 +73,12 @@ async def run_agent(message):
                 or validation.contains_pii
             )
             if triggered:
-                st.write(
-                    "저는 레스토랑 관련 질문에 대해서만 도와드리고 있어요. 메뉴를 확인하거나, 예약하거나, 음식을 주문할 수 있어요."
-                )
+
                 text_placeholder = st.empty()
+                text_placeholder.write(
+                    "저는 레스토랑 관련 질문에 대해서만 도와드리고 있어요. 메뉴를 확인하거나, 예약하거나, 음식을 주문할 수 있어요.~~"
+                )
+
                 st.session_state["text_placeholder"] = text_placeholder
                 response = ""
                 await session.add_items(
@@ -91,7 +93,7 @@ async def run_agent(message):
                             "content": [
                                 {
                                     "type": "output_text",
-                                    "text": "저는 레스토랑 관련 질문에 대해서만 도와드리고 있어요. 메뉴를 확인하거나, 예약하거나, 음식을 주문할 수 있어요.",
+                                    "text": "저는 레스토랑 관련 질문에 대해서만 도와드리고 있어요. 메뉴를 확인하거나, 예약하거나, 음식을 주문할 수 있어요.~~",
                                 }
                             ],
                         },
@@ -118,7 +120,6 @@ async def run_agent(message):
                         st.write(f"[{event.new_agent.name}에 연결되었습니다.]")
 
                         st.session_state["agent"] = event.new_agent
-
                         text_placeholder = st.empty()
 
                         st.session_state["text_placeholder"] = text_placeholder
@@ -127,7 +128,7 @@ async def run_agent(message):
         except InputGuardrailTripwireTriggered:
             st.write("[InputGuardrail 작동!]")
             st.write(
-                "저는 레스토랑 관련 질문에 대해서만 도와드리고 있어요. 메뉴를 확인하거나, 예약하거나, 음식을 주문할 수 있어요."
+                "저는 레스토랑 관련 질문에 대해서만 도와드리고 있어요. 메뉴를 확인하거나, 예약하거나, 음식을 주문할 수 있어요~~."
             )
             text_placeholder = st.empty()
 
@@ -139,6 +140,10 @@ async def run_agent(message):
             st.write(
                 "저는 레스토랑 관련 질문에 대해서만 도와드리고 있어요. 메뉴를 확인하거나, 예약하거나, 음식을 주문할 수 있어요."
             )
+            text_placeholder = st.empty()
+
+            st.session_state["text_placeholder"] = text_placeholder
+            response = ""
 
 
 message = st.chat_input(

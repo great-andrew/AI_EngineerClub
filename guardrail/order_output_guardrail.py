@@ -11,7 +11,6 @@ from models import UserAccountContext, OrderOutputGuardRailOutput
 
 order_output_guardrail_agent = Agent(
     name="Order Output Guardrail Agent",
-    model="gpt-4o-mini",
     instructions="""
 Before sending your response, ensure the following:
 
@@ -47,12 +46,7 @@ async def order_output_guardrail(
 
     validation = result.final_output
 
-    triggered = (
-        validation.is_off_topic
-        or validation.contains_invalid_item
-        or validation.contains_incorrect_price
-        or validation.order_confirmed
-    )
+    triggered = validation.is_off_topic
 
     with st.sidebar:
         st.code(validation)

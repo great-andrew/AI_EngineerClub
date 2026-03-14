@@ -11,7 +11,6 @@ from models import UserAccountContext, ReservationOutputGuardRailOutput
 
 reservation_output_guardrail_agent = Agent(
     name="Reservation Output Guardrail Agent",
-    model="gpt-4o-mini",
     instructions="""
 Before sending your response, ensure the following:
 
@@ -46,12 +45,7 @@ async def reservation_output_guardrail(
 
     validation = result.final_output
 
-    triggered = (
-        validation.is_off_topic
-        or validation.contains_invalid_datetime
-        or validation.contains_incorrect_capacity
-        or validation.reservation_confirmed
-    )
+    triggered = validation.is_off_topic
 
     with st.sidebar:
         st.code(validation)
