@@ -76,13 +76,31 @@ async def handle_handoff(
 ):
 
     with st.sidebar:
-        st.write(
+        st.markdown(
             f"""
-            Handing off to {input_data.to_agent_name}
-            Reason: {input_data.reason}
-            Issue Type: {input_data.issue_type}
-            Description: {input_data.issue_description}
-        """
+            <div style="
+                background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
+                border-left: 3px solid #7bed9f;
+                border-radius: 8px;
+                padding: 1rem 1.2rem;
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+            ">
+                <div style="color: #7bed9f; font-weight: 700; font-size: 0.75rem; 
+                            letter-spacing: 0.05em; margin-bottom: 0.6rem;">
+                    🔀 HANDOFF
+                </div>
+                <div style="color: #e0e0e8; font-weight: 600; margin-bottom: 0.8rem; font-size: 0.95rem;">
+                    {input_data.to_agent_name}
+                </div>
+                <div style="color: #8888a0; font-size: 0.8rem; line-height: 1.6;">
+                    <span style="color: #ffa502;">Reason</span> · {input_data.reason}<br>
+                    <span style="color: #18dcff;">Type</span> · {input_data.issue_type}<br>
+                    <span style="color: #a29bfe;">Detail</span> · {input_data.issue_description}
+                </div>
+            </div>
+        """,
+            unsafe_allow_html=True,
         )
 
 
