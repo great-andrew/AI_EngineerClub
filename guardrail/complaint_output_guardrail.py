@@ -28,6 +28,9 @@ complaint_output_guardrail_agent = Agent(
     - Sincere empathy and apology.
     - Identification of the issue (e.g., cold food, slow service, wrong order).
     - Standard service recovery options (e.g., re-cooking, standard discount, small complimentary item).
+    - Refund policy information and general refund process guidance.
+    - Payment dispute acknowledgment and next steps.
+    - Compensation options within policy limits (e.g., digital vouchers, partial refunds).
     - Escalation to the on-site manager for serious safety or legal incidents.
     """,
     output_type=ComplaintOutputGuardRailOutput,

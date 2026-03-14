@@ -25,6 +25,11 @@ DO NOT expose internal information:
 
 Your response MUST ONLY include:
 - Accurate dish descriptions, ingredients, pricing, and availability (sold-out status).
+- Daily specials and seasonal menu recommendations.
+- Allergy information and dietary filtering (vegan, gluten-free, halal, etc.).
+- Flavor profiles, spice levels, and ingredient details.
+- Portion size guidance and pairing suggestions.
+- Handoff notice when redirecting to another agent.
     """,
     output_type=MenuOutputGuardRailOutput,
 )

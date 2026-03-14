@@ -26,7 +26,11 @@ DO NOT expose internal information:
 
 Your response MUST ONLY include:
 - Order recap, final total, discount application (within limits), and estimated pickup/service time.
-
+- Allergy confirmation for ordered items.
+- Coupon and loyalty point application details.
+- Order modification or cancellation guidance.
+- Menu item suggestions relevant to the current order.
+- Handoff notice when redirecting to another agent.
     """,
     output_type=OrderOutputGuardRailOutput,
 )

@@ -80,7 +80,7 @@ async def run_agent(message):
                 )
 
                 st.session_state["text_placeholder"] = text_placeholder
-                response = ""
+                # response = ""
                 await session.add_items(
                     [
                         {
@@ -125,6 +125,9 @@ async def run_agent(message):
                         st.session_state["text_placeholder"] = text_placeholder
                         response = ""
 
+            text_placeholder = st.empty()
+            st.session_state["text_placeholder"] = text_placeholder
+            response = ""
         except InputGuardrailTripwireTriggered:
             st.write("[InputGuardrail 작동!]")
             st.write(
@@ -152,8 +155,8 @@ message = st.chat_input(
 
 if message:
 
-    # if "text_placeholder" in st.session_state:
-    #     st.session_state["text_placeholder"].empty()
+    if "text_placeholder" in st.session_state:
+        st.session_state["text_placeholder"].empty()
 
     if message:
         with st.chat_message("human"):
