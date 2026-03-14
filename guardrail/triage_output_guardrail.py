@@ -45,9 +45,7 @@ async def triage_output_guardrail(
 
     validation = result.final_output
 
-    triggered = (
-        validation.is_off_topic or validation.is_abusive or validation.contains_pii
-    )
+    triggered = validation.is_off_topic
 
     with st.sidebar:
         st.write(validation)
