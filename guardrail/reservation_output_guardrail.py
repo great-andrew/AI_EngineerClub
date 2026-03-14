@@ -6,11 +6,12 @@ from agents import (
     output_guardrail,
     GuardrailFunctionOutput,
 )
-from models import UserAccountContext, OrderOutputGuardRailOutput
+from models import UserAccountContext, ReservationOutputGuardRailOutput
 
 
 reservation_output_guardrail_agent = Agent(
     name="Reservation Output Guardrail Agent",
+    model="gpt-4o-mini",
     instructions="""
 Before sending your response, ensure the following:
 
@@ -27,7 +28,7 @@ DO NOT expose internal information:
 Your response MUST ONLY include:
 - Booking availability, confirmation of guest details, and basic facility info (parking, high chairs).
     """,
-    output_type=OrderOutputGuardRailOutput,
+    output_type=ReservationOutputGuardRailOutput,
 )
 
 
@@ -45,7 +46,12 @@ async def reservation_output_guardrail(
 
     validation = result.final_output
 
-    triggered = validation.is_off_topic
+    triggered = (
+        validation.is_off_topic
+        or validation.contains_invalid_datetime
+        or validation.contains_incorrect_capacity
+        or validation.reservation_confirmed
+    )
 
     with st.sidebar:
         st.code(validation)

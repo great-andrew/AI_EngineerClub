@@ -1,6 +1,8 @@
-from agents import Agent, RunContextWrapper
-from models import UserAccountContext
+import streamlit as st
+from agents import Agent, RunContextWrapper, handoff
+from models import UserAccountContext, HandoffData
 from guardrail.menu_output_guardrail import menu_output_guardrail
+from agents.extensions import handoff_filters
 
 
 def dynamic_menu_agent_instructions(
@@ -22,6 +24,8 @@ def dynamic_menu_agent_instructions(
     ### OPERATING GUIDELINES:
     - Always prioritize safety by filtering out dishes containing ingredients the customer is allergic to.
     - Use descriptive language (e.g., "savory," "zesty," "locally-sourced") to enhance the dining appeal.
+
+    Do not handle orders, complaints, or reservations yourself — always hand off to the appropriate agent.
     """
 
 
@@ -31,4 +35,5 @@ menu_agent = Agent(
     output_guardrails=[
         menu_output_guardrail,
     ],
+    handoffs=[],
 )

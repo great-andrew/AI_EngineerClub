@@ -1,6 +1,8 @@
-from agents import Agent, RunContextWrapper
-from models import UserAccountContext
+import streamlit as st
+from agents import Agent, RunContextWrapper, handoff
+from models import UserAccountContext, HandoffData
 from guardrail.order_output_guardrail import order_output_guardrail
+from agents.extensions import handoff_filters
 
 
 def dynamic_order_agent_instructions(
@@ -22,6 +24,8 @@ def dynamic_order_agent_instructions(
     ### OPERATING GUIDELINES:
     - Never skip the "Order Recap" step to ensure 100% accuracy.
     - Ask, "Do you have any discount coupons or a membership ID?" before proceeding to the final total.
+
+    Do not attempt to handle complaints, reservations, or detailed menu inquiries yourself — always hand off to the appropriate agent.
     """
 
 
@@ -31,4 +35,5 @@ order_agent = Agent(
     output_guardrails=[
         order_output_guardrail,
     ],
+    handoffs=[],
 )

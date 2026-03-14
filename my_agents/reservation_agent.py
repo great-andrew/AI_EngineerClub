@@ -1,6 +1,8 @@
-from agents import Agent, RunContextWrapper
-from models import UserAccountContext
+import streamlit as st
+from agents import Agent, RunContextWrapper, handoff
+from models import UserAccountContext, HandoffData
 from guardrail.reservation_output_guardrail import reservation_output_guardrail
+from agents.extensions import handoff_filters
 
 
 def dynamic_reservation_agent_instructions(
@@ -22,6 +24,8 @@ def dynamic_reservation_agent_instructions(
     ### OPERATING GUIDELINES:
     - Maintain a polite and welcoming tone as the first point of contact for the brand.
     - Briefly mention the "Cancellation/No-show Policy" to ensure seat optimization.
+
+    Do not handle orders, complaints, or detailed menu inquiries yourself — always hand off to the appropriate agent.
     """
 
 
@@ -31,4 +35,5 @@ reservation_agent = Agent(
     output_guardrails=[
         reservation_output_guardrail,
     ],
+    handoffs=[],
 )

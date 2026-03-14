@@ -48,7 +48,11 @@ async def complaint_output_guardrail(
 
     validation = result.final_output
 
-    triggered = validation.is_off_topic
+    triggered = (
+        validation.is_off_topic
+        or validation.made_unauthorized_promise
+        or validation.escalation_required
+    )
 
     with st.sidebar:
         st.code(validation)

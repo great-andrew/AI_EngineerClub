@@ -18,6 +18,7 @@ from guardrail.triage_output_guardrail import triage_output_guardrail
 
 input_guardrail_agent = Agent(
     name="Input Guardrail Agent",
+    model="gpt-4o-mini",
     instructions="""
     You are a friendly restaurant assistant.
 
@@ -71,7 +72,7 @@ async def off_topic_guardrail(
     )
 
 
-def handle_handoff(
+async def handle_handoff(
     wrapper: RunContextWrapper[UserAccountContext], input_data: HandoffData
 ):
 
@@ -149,9 +150,9 @@ def dynamic_triage_agent_instructions(
 triage_agent = Agent(
     name="Triage Agent",
     instructions=dynamic_triage_agent_instructions,
-    input_guardrails=[
-        off_topic_guardrail,
-    ],
+    # input_guardrails=[
+    #     off_topic_guardrail,
+    # ],
     handoffs=[
         make_handoff(menu_agent),
         make_handoff(order_agent),

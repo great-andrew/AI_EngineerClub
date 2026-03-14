@@ -6,11 +6,12 @@ from agents import (
     output_guardrail,
     GuardrailFunctionOutput,
 )
-from models import UserAccountContext, OrderOutputGuardRailOutput
+from models import UserAccountContext, TriageOutputGuardRailOutput
 
 
 triage_output_guardrail_agent = Agent(
     name="Triage Output Guardrail Agent",
+    model="gpt-4o-mini",
     instructions="""
 Before sending your response, ensure the following:
 
@@ -27,7 +28,7 @@ DO NOT expose internal information:
 Your response MUST ONLY include:
 - Accurate intent identification and efficient redirection to the appropriate specialized agent.
     """,
-    output_type=OrderOutputGuardRailOutput,
+    output_type=TriageOutputGuardRailOutput,
 )
 
 
@@ -45,10 +46,12 @@ async def triage_output_guardrail(
 
     validation = result.final_output
 
-    triggered = validation.is_off_topic
+    triggered = (
+        validation.is_off_topic or validation.is_abusive or validation.contains_pii
+    )
 
     with st.sidebar:
-        st.code(validation)
+        st.write(validation)
 
     return GuardrailFunctionOutput(
         output_info=validation,

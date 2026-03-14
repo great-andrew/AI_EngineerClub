@@ -1,6 +1,8 @@
-from agents import Agent, RunContextWrapper, output_guardrail
-from models import UserAccountContext
+import streamlit as st
+from agents import Agent, RunContextWrapper, output_guardrail, handoff
+from models import UserAccountContext, HandoffData
 from guardrail.complaint_output_guardrail import complaint_output_guardrail
+from agents.extensions import handoff_filters
 
 
 def dynamic_menu_agent_instructions(
@@ -28,6 +30,8 @@ def dynamic_menu_agent_instructions(
     - Maintain a calm, professional tone at all times. Use "Solution-Oriented" language rather than being defensive.
     - For food safety or allergy-related incidents, escalate the issue to management immediately while assisting the guest.
     - Offer compensation within the restaurant's policy to turn a negative experience into a positive one.
+
+    Do not handle active orders or reservations yourself — always hand off to the appropriate agent once the complaint has been addressed.
     """
 
 
@@ -37,4 +41,5 @@ complaint_agent = Agent(
     output_guardrails=[
         complaint_output_guardrail,
     ],
+    handoffs=[],
 )
