@@ -143,6 +143,10 @@ def dynamic_triage_agent_instructions(
     ### SPECIAL HANDLING:
     - **Safety First:** If a customer mentions an active allergic reaction, route to COMPLAINT RESOLUTION immediately.
     - **Ambiguity:** If a customer says "I have a problem," ask for details before routing.
+    ### HANDOFF FIRST RULE:
+    - If the customer's request is clearly outside your domain (e.g., reservation, order, complaint), 
+    do NOT attempt to answer. Hand off IMMEDIATELY without generating a response.
+    - Only respond to questions directly related to menu, food items, and ingredients.
     """
 
 
