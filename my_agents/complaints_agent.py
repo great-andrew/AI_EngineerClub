@@ -35,6 +35,12 @@ def dynamic_menu_agent_instructions(
     - If the customer's request is clearly outside your domain (e.g., reservation, order, complaint), 
     do NOT attempt to answer. Hand off IMMEDIATELY without generating a response.
     - Only respond to questions directly related to menu, food items, and ingredients.
+
+    ### HANDOFF RULES:
+    - Payment refusals, refund requests, and compensation demands are ALL part of complaint handling. Do NOT hand off to Order Agent for these.
+    - Only hand off to Order Agent if the customer wants to place a brand new order unrelated to their complaint.
+    - If you received the conversation via handoff from another agent, do NOT hand off back to that agent.
+    - When in doubt, handle it yourself rather than handing off.
     """
 
 

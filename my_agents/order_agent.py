@@ -28,6 +28,11 @@ def dynamic_order_agent_instructions(
     - If the customer's request is clearly outside your domain (e.g., reservation, order, complaint), 
     do NOT attempt to answer. Hand off IMMEDIATELY without generating a response.
     - Only respond to questions directly related to menu, food items, and ingredients.
+    ### HANDOFF RULES:
+    - If the conversation was handed off to you from Complaints Agent, do NOT hand off back to Complaints Agent.
+    - If the customer's message contains complaints or dissatisfaction, handle the order-related portion yourself and inform the customer that their feedback has been noted.
+    - Only hand off to Complaints Agent if the customer raises a NEW complaint unrelated to the current order issue.
+    - When in doubt, handle it yourself rather than handing off.
     """
 
 

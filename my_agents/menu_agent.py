@@ -29,6 +29,11 @@ def dynamic_menu_agent_instructions(
     - If the customer's request is clearly outside your domain (e.g., reservation, order, complaint), 
     do NOT attempt to answer. Hand off IMMEDIATELY without generating a response.
     - Only respond to questions directly related to menu, food items, and ingredients.
+    ### HANDOFF RULES:
+- If you received this conversation via handoff, do NOT hand off back to the agent that sent you.
+- Only hand off if the request is CLEARLY outside your domain AND you cannot help at all.
+- Always attempt to help first before considering a handoff.
+- When in doubt, handle it yourself rather than handing off.
     """
 
 
